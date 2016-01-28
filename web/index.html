@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+        <script>
+             $(document).ready(function(){
+                $("#btnconsultar").click(function(){
+                        $.ajax({
+                            type:"GET",
+                            url:"http://localhost:8080/Exmen1/Examen/Asiento",
+                            dataType:"json",
+                            contentType:"text/plain"
+                        }).done(function(msg){
+                            console.log(msg);
+                            
+                            var tabla="<table border=1>";
+                            
+                            msg.forEach(function(elemento){
+                                tabla+="<tr>"
+                                tabla+="<td>" + elemento.codigo+  "</td><br>"
+                                tabla+="<td>" + elemento.precio+  "</td></br>"
+                                tabla+="<td>" + elemento.clase+  "</td></br>"
+                                tabla+="<td>" + elemento.ubicacion+  "</td></br>"
+                                tabla+="</tr>"
+                            });
+                            tabla+="</table>"
+                            $("#contenido").html(tabla)
+                         }).error(function(err){
+                                console.log(err);
+                        });
+                });
+                //boton de insertar
+                $("#btninsertar").click(function(){
+                   var codigo = $("#txtcodigo").val();
+                   var precio=$("#txtprecio").val();  
+                   var clase=$("#txtclase").val();  
+                   var ubicacion=$("#txtubicacion").val();  
+                   //2
+                   var codigo2 = $("#txtcreserva").val();
+                   var fecha=$("#txtfecha").val();  
+                   var destino=$("#txtdestino").val();  
+                   var cedula=$("#txtcedula").val();
+                  // datos ={"cedula":cedula,"codigodereserva":codigo2,"destinoaviajar":destino,"fechadereserva":fecha,"listaasiento":[]};
+                 datos = {"clase":clase,"codigo":codigo,"precio":precio,"ubicacion":ubicacion}
+                   //datos.listaasiento.push({"clase":clase,"codigo":codigo,"precio":precio,"ubicacion":ubicacion});
+                   $.ajax({
+                       type:"POST",
+                       url:"http://localhost:8080/Exmen1/Examen/Asiento",
+                       contentType:"application/json",
+                       dataType:"text",
+                       data: JSON.stringify(datos) 
+                   }).done(function(msg){
+                       console.log("Usted insertó correctamente");
+                   }).error(function(msg){
+                       console.log("Problemas al insertar");
+                   }); 
+                });
+                 //boton de modificar
+                $("#btnmodificar").click(function(){
+                   var codigo = $("#txtcodigo").val();
+                   var precio=$("#txtprecio").val();  
+                   var clase=$("#txtclase").val();  
+                   var ubicacion=$("#txtubicacion").val();
+                   //2
+                   var codigo2 = $("#txtcreserva").val();
+                   var fecha=$("#txtfecha").val();  
+                   var destino=$("#txtdestino").val();  
+                   var cedula=$("#txtcedula").val();
+                   //datos ={"cedula":cedula,"codigodereserva":codigo2,"destinoaviajar":destino,"fechadereserva":fecha,"listaasiento":[]};
+                  datos = {"clase":clase,"codigo":codigo,"precio":precio,"ubicacion":ubicacion}
+                  //datos.listaasiento.push({"clase":clase,"codigo":codigo,"precio":precio,"ubicacion":ubicacion}); 
+                  // datos ={"cedula":"0802268615","codigodereserva":"1","destinoaviajar":"Colombia","fechadereserva":"12/08/2015","listaasiento":[]};
+                   //datos = {"clase":clase,"codigo":codigo,"precio":precio,"ubicacion":ubicacion}
+                   $.ajax({
+                       type:"PUT",
+                       url:"http://localhost:8080/Exmen1/Examen/Asiento",
+                       contentType:"application/json",
+                       dataType:"text",
+                       data: JSON.stringify(datos) 
+                   }).done(function(msg){
+                       console.log("Usted modificó correctamente");
+                   }).error(function(msg){
+                       console.log("Problemas al modificar");
+                   }); 
+                });
+                //boton eliminar
+                $("#btneliminar").click(function(){
+                    var varid=$("#txtcodigo").val();
+                   $.ajax({
+                       type:"DELETE",
+                       url:"http://localhost:8080/Exmen1/Examen/Asiento/"+varid,
+                       dataType:"text",
+                       contentType:"text/plain"
+                   }).done(function(msg){
+                       console.log("Usted eliminó el contacto correctamente");
+                   }).error(function(err){
+                     console.log(err);  
+                   });
+                });
+                
+             });
+            
+        </script>
+    </head>
+    
+    <body>
+        
+        
+        <label>Asiento</label>
+        <label>Codigo</label></br>
+        <input type="text" id="txtcodigo" value=""/></br>
+        <label>Precio</label></br>
+        <input type="text" id="txtprecio" value=""/></br>
+        <label>Clase</label></br>
+        <input type="text" id="txtclase" value=""/></br>
+        <label>Ubicacion</label></br>
+        <input type="text" id="txtubicacion" value=""/></br>
+        
+       
+       <table border=1>
+           
+            <tr>
+                <td>Codigo</td><td>Precio</td><td>Clase</td><td>Ubicacion</td>
+            </tr>
+                
+        </table>
+         <div id="contenido">Reservas de tickes</div>
+        
+        
+        <form id="formEnviar">
+        <input type="button" id="btnconsultar" value="Consultar"/>
+        <input type="button" id="btninsertar" value="Insertar"/>
+        <input type="button" id="btnmodificar" value="Modificar"/>
+        <input type="button" id="btneliminar" value="Eliminar"/>
+        </form>
+    </body>
+</html>
